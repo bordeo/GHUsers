@@ -10,23 +10,31 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@eva-design/eva": "^1.4.0",
     "@react-native-community/masked-view": "^0.1.7",
     "@react-navigation/bottom-tabs": "^5.2.1",
     "@react-navigation/native": "^5.1.0",
     "@react-navigation/stack": "^5.2.1",
+    "@ui-kitten/components": "^4.4.1",
+    "@ui-kitten/eva-icons": "^4.4.1",
     "axios": "^0.19.2",
     "lodash": "^4.17.15",
+    "parse-link-header": "^1.0.1",
+    "querystring": "^0.2.0",
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-gesture-handler": "^1.6.0",
     "react-native-reanimated": "^1.7.0",
     "react-native-safe-area-context": "^0.7.3",
-    "react-native-screens": "^2.3.0"
+    "react-native-screens": "^2.3.0",
+    "react-native-svg": "^12.0.3",
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",
     "@babel/runtime": "^7.8.7",
     "@react-native-community/eslint-config": "^0.0.7",
+    "@types/parse-link-header": "^1.0.0",
     "@types/react": "^16.9.23",
     "@types/react-native": "^0.61.22",
     "babel-jest": "^25.1.0",
