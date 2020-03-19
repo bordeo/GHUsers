@@ -2,6 +2,7 @@ import React from 'react';
 import {useEffect, useState, useCallback} from 'react';
 import {SafeAreaView, View, StyleSheet} from 'react-native';
 import parse from 'parse-link-header';
+import {useSelector, useDispatch} from 'react-redux';
 
 import axios from 'axios';
 import {debounce} from 'lodash';
@@ -19,6 +20,7 @@ import {
   Avatar,
   Modal,
 } from '@ui-kitten/components';
+import {USER_LIST_ACTION_TYPES} from '../state/app/actions';
 
 const Users = ({navigation}) => {
   const [query, setQuery] = useState('');
@@ -26,6 +28,10 @@ const Users = ({navigation}) => {
   const [nextUrl, setNextUrl] = useState('');
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const store = useSelector(stora => stora);
+  const dispatch = useDispatch();
+
+  console.log(store);
 
   const getUsers = useCallback(
     debounce(async userQuery => {
@@ -49,6 +55,16 @@ const Users = ({navigation}) => {
     [setUsers, setTotalCount, setLoading, setNextUrl],
   );
 
+  useEffect(() => {
+    dispatch({
+      type: USER_LIST_ACTION_TYPES.ADD_USER,
+      userData: {
+        name: 'Alex',
+        surname: 'Bordin',
+        age: 5,
+      },
+    });
+  }, []);
   useEffect(() => {
     if (query) {
       getUsers(query);
