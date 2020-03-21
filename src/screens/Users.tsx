@@ -1,10 +1,9 @@
 import React from 'react';
 import {useEffect, useState, useCallback} from 'react';
-import {SafeAreaView, View, StyleSheet} from 'react-native';
-import parse from 'parse-link-header';
-import {useSelector, useDispatch} from 'react-redux';
+import {SafeAreaView, StyleSheet} from 'react-native';
+import {useSelector} from 'react-redux';
+import {searchUsers} from '../state/userList/asyncActions';
 
-import axios from 'axios';
 import {debounce} from 'lodash';
 import {
   Layout,
@@ -20,56 +19,29 @@ import {
   Avatar,
   Modal,
 } from '@ui-kitten/components';
-import {USER_LIST_ACTION_TYPES} from '../state/app/actions';
+import {useActions} from '../hooks/useActions';
+import {selector as UserListSelector} from '../state/userList';
 
 const Users = ({navigation}) => {
   const [query, setQuery] = useState('');
-  const [users, setUsers] = useState([]);
-  const [nextUrl, setNextUrl] = useState('');
-  const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const store = useSelector(stora => stora);
-  const dispatch = useDispatch();
-
-  console.log(store);
-
-  const getUsers = useCallback(
-    debounce(async userQuery => {
-      setLoading(true);
-      const users = await axios.get(
-        `https://api.github.com/search/users?q=${userQuery}`,
-      );
-      console.log(users);
-      setLoading(false);
-      const {
-        data: {items, total_count},
-        headers: {link},
-      } = users;
-
-      const {next} = parse(link);
-
-      setNextUrl(next ? next.url : '');
-      setUsers(items);
-      setTotalCount(total_count);
-    }, 500),
-    [setUsers, setTotalCount, setLoading, setNextUrl],
+  const {users, totalCount, next, refreshing, error} = useSelector(
+    UserListSelector,
   );
 
-  useEffect(() => {
-    dispatch({
-      type: USER_LIST_ACTION_TYPES.ADD_USER,
-      userData: {
-        name: 'Alex',
-        surname: 'Bordin',
-        age: 5,
-      },
-    });
-  }, []);
+  const asyncSearchUsers = useActions(searchUsers);
+
+  const getUsersDecounced = useCallback(
+    debounce(async userQuery => {
+      asyncSearchUsers(userQuery);
+    }, 500),
+    [asyncSearchUsers],
+  );
   useEffect(() => {
     if (query) {
-      getUsers(query);
+      getUsersDecounced(query);
+      // asyncSearchUsers(query);
     }
-  }, [query, getUsers]);
+  }, [query, getUsersDecounced]);
 
   const renderItemAccessory = style => (
     <Icon
@@ -97,12 +69,12 @@ const Users = ({navigation}) => {
   const renderSearchIcon = style => <Icon {...style} name="search-outline" />;
   const renderListFooterComponent = () => (
     <>
-      <Modal backdropStyle={styles.backdrop} visible={loading}>
+      <Modal backdropStyle={styles.backdrop} visible={refreshing}>
         <Layout style={styles.modalContainer}>
           <Spinner />
         </Layout>
       </Modal>
-      {totalCount > 40 && (
+      {!!next && (
         <Layout style={styles.loadMoreContainer}>
           <Button size="small">Load More</Button>
         </Layout>
@@ -116,21 +88,20 @@ const Users = ({navigation}) => {
       <Divider />
       <Layout style={styles.container}>
         <Input
+          disabled={refreshing}
           editable
           maxLength={40}
-          onChangeText={text => {
-            setNextUrl('');
-            setQuery(text);
-          }}
+          onChangeText={setQuery}
           value={query}
           icon={renderSearchIcon}
           placeholder="Search for users"
         />
+        {error && <Text>{error.message}</Text>}
         {totalCount > 0 && <Text>{totalCount} Users</Text>}
         <List
           data={users}
           renderItem={renderItem}
-          refreshing={loading}
+          refreshing={refreshing}
           ListFooterComponent={renderListFooterComponent}
         />
       </Layout>

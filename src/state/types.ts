@@ -4,28 +4,27 @@ export type User = {
   age: number;
 };
 
-export type UserListState = User[];
+export type UserListState = {
+  users: User[];
+  refreshing: boolean;
+  error: null | string;
+};
 
-export type AddUserAction = {
+export type UserListRequestAction = {
   type: string;
-  userData: User;
 };
-export type UpdateUserAction = {
+export type UserListFailureAction = {
   type: string;
-  index: number;
-  userData: User;
 };
-export type RemoveUserAction = {
+export type UserListSuccessAction = {
   type: string;
-  index: number;
 };
 
 export type UserListAction =
-  | AddUserAction
-  | UpdateUserAction
-  | RemoveUserAction;
+  | UserListRequestAction
+  | UserListFailureAction
+  | UserListSuccessAction;
 
 export type AppState = {
   userList: UserListState;
-  // add future state slices here
 };
