@@ -18,7 +18,6 @@
     "@ui-kitten/components": "^4.4.1",
     "@ui-kitten/eva-icons": "^4.4.1",
     "axios": "^0.19.2",
-    "deep-clone": "^3.0.3",
     "lodash": "^4.17.15",
     "parse-link-header": "^1.0.1",
     "querystring": "^0.2.0",

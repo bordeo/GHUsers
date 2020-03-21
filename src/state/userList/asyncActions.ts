@@ -7,7 +7,6 @@ export const searchUsers = payload =>
 
     try {
       const response = await githubApi.getUsers(payload);
-      console.log(response);
       dispatch(actions.userList.success(response));
     } catch (error) {
       console.log(error);
@@ -21,7 +20,6 @@ export const getUserProfile = payload =>
 
     try {
       const response = await githubApi.getUserProfile(payload);
-      console.log(response);
       dispatch(actions.userProfile.success(response));
     } catch (error) {
       console.log(error);
@@ -35,7 +33,6 @@ export const getUserRepos = payload =>
 
     try {
       const response = await githubApi.getUserRepos(payload);
-      console.log(response);
       dispatch(actions.userRepos.success(response));
     } catch (error) {
       console.log(error);

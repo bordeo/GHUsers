@@ -25,11 +25,11 @@ const getUserProfile = async (username: string): Promise<{} | undefined> => {
   return {userProfile: data};
 };
 
-const getUserRepos = async (
-  username: string,
-  sort: string = 'full_name',
-  direction: undefined | string = undefined,
-): Promise<{} | undefined> => {
+const getUserRepos = async ({
+  username,
+  sort,
+  direction,
+}): Promise<{} | undefined> => {
   const response = await axios.get(`${GITHUB_PI_URL}/users/${username}/repos`, {
     params: {
       sort,
@@ -37,7 +37,6 @@ const getUserRepos = async (
     },
   });
   const {data} = response;
-  console.log(response);
   return {userRepos: data};
 };
 

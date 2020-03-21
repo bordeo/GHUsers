@@ -1,7 +1,6 @@
 import {handleActions} from 'redux-actions';
 
 import {UserListState} from '../types';
-import deepClone from 'deep-clone';
 import actions from './actions';
 
 export const initialState: UserListState = {

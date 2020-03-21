@@ -7,14 +7,14 @@ import {mapping, light as lightTheme} from '@eva-design/eva';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import Users from './src/screens/Users';
-import UserDetails from './src/screens/UserDetails';
-import store from './src/state/store';
+import Users from './screens/Users';
+import UserDetails from './screens/UserDetails';
+import store from './state/store';
 import {Provider} from 'react-redux';
 
 const Stack = createStackNavigator();
 
-const App: () => React$Node = () => {
+const App = () => {
   return (
     <>
       <IconRegistry icons={EvaIconsPack} />

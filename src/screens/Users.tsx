@@ -1,6 +1,6 @@
 import React from 'react';
 import {useEffect, useState, useCallback} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {SafeAreaView, StyleSheet, Image} from 'react-native';
 import {useSelector} from 'react-redux';
 import {searchUsers} from '../state/userList/asyncActions';
 import {useActions} from '../hooks/useActions';
@@ -39,7 +39,6 @@ const Users = ({navigation}) => {
   useEffect(() => {
     if (query) {
       getUsersDecounced(query);
-      // asyncSearchUsers(query);
     }
   }, [query, getUsersDecounced]);
 
@@ -88,7 +87,6 @@ const Users = ({navigation}) => {
       <Divider />
       <Layout style={styles.container}>
         <Input
-          disabled={refreshing}
           editable
           maxLength={40}
           onChangeText={setQuery}
@@ -121,7 +119,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   backdrop: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
   loadMoreContainer: {
     flex: 1,

@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   backdrop: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
 });
 
