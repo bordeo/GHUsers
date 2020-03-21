@@ -16,7 +16,6 @@ const BackIcon = style => <Icon {...style} name="arrow-back" />;
 
 const UserDetails = ({route, navigation}) => {
   const {user} = route.params;
-  console.log(user);
   const navigateBack = () => {
     navigation.goBack();
   };
@@ -32,8 +31,12 @@ const UserDetails = ({route, navigation}) => {
       />
       <Divider />
       <Tab.Navigator>
-        <Tab.Screen name="Profile" component={Profile} />
-        <Tab.Screen name="Repositories" component={Repositories} />
+        <Tab.Screen name="Profile" component={Profile} initialParams={{user}} />
+        <Tab.Screen
+          name="Repositories"
+          component={Repositories}
+          initialParams={{user}}
+        />
       </Tab.Navigator>
     </SafeAreaView>
   );

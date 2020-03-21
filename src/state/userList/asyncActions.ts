@@ -3,8 +3,6 @@ import githubApi from '../../services/api/github';
 
 export const searchUsers = payload =>
   async function thunk(dispatch) {
-    console.log(actions);
-    console.log(payload);
     dispatch(actions.userList.request());
 
     try {
@@ -17,4 +15,32 @@ export const searchUsers = payload =>
     }
   };
 
-export default {searchUsers};
+export const getUserProfile = payload =>
+  async function thunk(dispatch) {
+    dispatch(actions.userProfile.request());
+
+    try {
+      const response = await githubApi.getUserProfile(payload);
+      console.log(response);
+      dispatch(actions.userProfile.success(response));
+    } catch (error) {
+      console.log(error);
+      dispatch(actions.userProfile.failure(error));
+    }
+  };
+
+export const getUserRepos = payload =>
+  async function thunk(dispatch) {
+    dispatch(actions.userRepos.request());
+
+    try {
+      const response = await githubApi.getUserRepos(payload);
+      console.log(response);
+      dispatch(actions.userRepos.success(response));
+    } catch (error) {
+      console.log(error);
+      dispatch(actions.userRepos.failure(error));
+    }
+  };
+
+export default {searchUsers, getUserProfile};

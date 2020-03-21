@@ -3,6 +3,8 @@ import {useEffect, useState, useCallback} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import {searchUsers} from '../state/userList/asyncActions';
+import {useActions} from '../hooks/useActions';
+import {selector as UserListSelector} from '../state/userList';
 
 import {debounce} from 'lodash';
 import {
@@ -19,8 +21,6 @@ import {
   Avatar,
   Modal,
 } from '@ui-kitten/components';
-import {useActions} from '../hooks/useActions';
-import {selector as UserListSelector} from '../state/userList';
 
 const Users = ({navigation}) => {
   const [query, setQuery] = useState('');
