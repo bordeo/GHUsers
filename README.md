@@ -1,9 +1,9 @@
-#GHUsers
+# GHUsers
 
 <p align="center" margin-bottom="0">
-    <img alt="GHUsers" width="420" height="auto" src="./.github/users.png">
-    <img alt="GHUsers" width="420" height="auto" src="./.github/user-profile.png">
-        <img alt="GHUsers" width="420" height="auto" src="./.github/repos.png">
+    <img alt="GHUsers" width="280" height="auto" src="./.github/users.png">
+    <img alt="GHUsers" width="280" height="auto" src="./.github/user-profile.png">
+        <img alt="GHUsers" width="280" height="auto" src="./.github/repos.png">
 </p>
 
 ## About The Project
