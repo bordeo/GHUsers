@@ -85,6 +85,8 @@ const Users = ({navigation}) => {
           editable
           maxLength={40}
           autoCapitalize="none"
+          autoCorrect={false}
+          autoCompleteType="off"
           onChangeText={setQuery}
           value={query}
           icon={renderSearchIcon}
@@ -112,6 +114,7 @@ const Users = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    paddingBottom: 0,
     flex: 1,
     justifyContent: 'flex-start',
   },

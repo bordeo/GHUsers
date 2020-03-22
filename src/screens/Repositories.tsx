@@ -16,10 +16,10 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import Error from '../components/Error';
 
 const sortOptions = [
-  {text: 'full_name'},
-  {text: 'created'},
-  {text: 'updated'},
-  {text: 'pushed'},
+  {value: 'full_name', text: 'Name'},
+  {value: 'created', text: 'Creation Date'},
+  {value: 'updated', text: 'Update Date'},
+  {value: 'pushed', text: 'Push Date'},
 ];
 
 const Repositories = ({route, navigation}) => {
@@ -34,9 +34,9 @@ const Repositories = ({route, navigation}) => {
     asyncGetUserRepos({username: user.login});
   }, [user, asyncGetUserRepos]);
 
-  const openRepoUrl = useCallback(url => {
+  const openRepoUrl = url => {
     Linking.openURL(url).catch(err => console.error('An error occurred', err));
-  });
+  };
 
   const renderItem = ({item, index}) => (
     <ListItem
@@ -65,7 +65,7 @@ const Repositories = ({route, navigation}) => {
     setDirection(newDirection);
     asyncGetUserRepos({
       username: user.login,
-      sort: sort.text,
+      sort: sort.value,
       direction: newDirection,
     });
   };
@@ -84,7 +84,11 @@ const Repositories = ({route, navigation}) => {
       <Layout style={styles.container}>
         <Text category="h6">Repositories</Text>
         <Error error={error} />
+
         <Layout style={styles.filters}>
+          <Text style={styles.sortLabel} category="label">
+            SORT BY
+          </Text>
           <Select
             data={sortOptions}
             selectedOption={sort}
@@ -118,6 +122,8 @@ const Repositories = ({route, navigation}) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    paddingBottom: 0,
+
     flex: 1,
     justifyContent: 'flex-start',
   },
@@ -139,9 +145,8 @@ const styles = StyleSheet.create({
   list: {
     backgroundColor: 'white',
   },
-  stargazersCount: {
-    // width: 40,
-    // textAlign: 'right',
+  sortLabel: {
+    marginRight: 10,
   },
 });
 

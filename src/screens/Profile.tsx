@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import React, {useEffect, useCallback} from 'react';
+import {SafeAreaView, StyleSheet, Linking} from 'react-native';
 import {useSelector} from 'react-redux';
 import {getUserProfile} from '../state/userList/asyncActions';
 import {useActions} from '../hooks/useActions';
@@ -25,13 +25,17 @@ const Profile = ({route, navigation}) => {
     asyncGetUserProfile({username: user.login});
   }, [user, asyncGetUserProfile]);
 
+  const openProfileUrl = url => {
+    Linking.openURL(url).catch(err => console.error('An error occurred', err));
+  };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <Layout style={styles.container}>
         <Text category="h6">Profile</Text>
         <Error error={error} />
         {!!userProfile && (
-          <Card>
+          <Card style={styles.card}>
             <Layout style={styles.content}>
               <Layout style={styles.avatar}>
                 <Avatar size="giant" source={{uri: userProfile.avatar_url}} />
@@ -41,7 +45,12 @@ const Profile = ({route, navigation}) => {
                 {!!userProfile.email && (
                   <Text category="s1">{userProfile.email}</Text>
                 )}
-                <Button style={styles.button} icon={NavigateIcon}>
+                <Button
+                  style={styles.button}
+                  icon={NavigateIcon}
+                  onPress={() => {
+                    openProfileUrl(userProfile.html_url);
+                  }}>
                   Profile page
                 </Button>
                 <Text category="s1">{userProfile.location}</Text>
@@ -63,14 +72,18 @@ const styles = StyleSheet.create({
   },
   content: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   avatar: {
     flex: 0.3,
   },
   userData: {
-    flex: 0.7,
+    flex: 0.6,
   },
   button: {flexDirection: 'row-reverse'},
+  card: {
+    marginTop: 20,
+  },
 });
 
 export default Profile;

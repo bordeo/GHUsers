@@ -2,7 +2,7 @@ import React, {useEffect, useCallback} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Profile from './Profile';
 import Repositories from './Repositories';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import {
   Divider,
   TopNavigation,
@@ -45,7 +45,11 @@ const UserDetails = ({route, navigation}) => {
         leftControl={BackAction()}
       />
       <Divider />
-      <Tab.Navigator>
+      <Tab.Navigator
+        tabBarOptions={{
+          style: styles.tabBar,
+          labelStyle: styles.labelStyle,
+        }}>
         <Tab.Screen name="Profile" component={Profile} initialParams={{user}} />
         <Tab.Screen
           name="Repositories"
@@ -56,5 +60,9 @@ const UserDetails = ({route, navigation}) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  labelStyle: {fontSize: 16},
+});
 
 export default UserDetails;
