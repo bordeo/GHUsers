@@ -1,6 +1,6 @@
 import React from 'react';
 import {useEffect, useState, useCallback} from 'react';
-import {SafeAreaView, StyleSheet, Image} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import {searchUsers} from '../state/userList/asyncActions';
 import {useActions} from '../hooks/useActions';
@@ -13,14 +13,13 @@ import {
   Divider,
   TopNavigation,
   Input,
-  Spinner,
   List,
   ListItem,
-  Button,
   Icon,
   Avatar,
-  Modal,
 } from '@ui-kitten/components';
+import LoadingIndicator from '../components/LoadingIndicator';
+import Error from '../components/Error';
 
 const Users = ({navigation}) => {
   const [query, setQuery] = useState('');
@@ -32,13 +31,16 @@ const Users = ({navigation}) => {
 
   const getUsersDecounced = useCallback(
     debounce(async userQuery => {
-      asyncSearchUsers(userQuery);
+      asyncSearchUsers({query: userQuery});
     }, 500),
     [asyncSearchUsers],
   );
+
   useEffect(() => {
-    if (query) {
+    if (query && query.length > 2) {
       getUsersDecounced(query);
+    } else {
+      getUsersDecounced.cancel();
     }
   }, [query, getUsersDecounced]);
 
@@ -57,29 +59,22 @@ const Users = ({navigation}) => {
 
   const renderItem = ({item, index}) => (
     <ListItem
-      title={item.login}
       icon={style => renderItemIcon(style, item)}
       onPress={() =>
         navigation.navigate('UserDetails', {name: item.login, user: item})
       }
-      accessory={renderItemAccessory}
-    />
+      accessory={renderItemAccessory}>
+      <Avatar size="medium" source={{uri: item.avatar_url}} />
+      <Text style={styles.itemName}>{item.login}</Text>
+    </ListItem>
   );
   const renderSearchIcon = style => <Icon {...style} name="search-outline" />;
-  const renderListFooterComponent = () => (
-    <>
-      <Modal backdropStyle={styles.backdrop} visible={refreshing}>
-        <Layout style={styles.modalContainer}>
-          <Spinner />
-        </Layout>
-      </Modal>
-      {!!next && (
-        <Layout style={styles.loadMoreContainer}>
-          <Button size="small">Load More</Button>
-        </Layout>
-      )}
-    </>
-  );
+
+  const onListEndReached = useCallback(() => {
+    if (next) {
+      asyncSearchUsers({query, page: next.page});
+    }
+  }, [next, query, asyncSearchUsers]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -89,19 +84,27 @@ const Users = ({navigation}) => {
         <Input
           editable
           maxLength={40}
+          autoCapitalize="none"
           onChangeText={setQuery}
           value={query}
           icon={renderSearchIcon}
           placeholder="Search for users"
         />
-        {error && <Text>{error.message}</Text>}
-        {totalCount > 0 && <Text>{totalCount} Users</Text>}
+        <Error error={error} />
+        {totalCount > 0 && (
+          <Text style={styles.totalCount} status="info">
+            {totalCount} Users found
+          </Text>
+        )}
         <List
+          style={styles.list}
           data={users}
           renderItem={renderItem}
           refreshing={refreshing}
-          ListFooterComponent={renderListFooterComponent}
+          onEndReached={onListEndReached}
+          onEndReachedThreshold={0.8}
         />
+        <LoadingIndicator visible={refreshing} />
       </Layout>
     </SafeAreaView>
   );
@@ -112,14 +115,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
   },
-  modalContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 256,
-    padding: 16,
+  totalCount: {
+    // textAlign: 'center',
+    marginLeft: 20,
   },
-  backdrop: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  list: {
+    backgroundColor: 'white',
+  },
+  itemName: {
+    marginLeft: 20,
   },
   loadMoreContainer: {
     flex: 1,

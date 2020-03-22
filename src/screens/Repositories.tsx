@@ -1,19 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {SafeAreaView, StyleSheet, Linking} from 'react-native';
 import {useSelector} from 'react-redux';
 import {getUserRepos} from '../state/userList/asyncActions';
 import {useActions} from '../hooks/useActions';
 import {selector as userListSelector} from '../state/userList';
 import {
   Layout,
-  Spinner,
   List,
   ListItem,
-  Modal,
   Text,
   Icon,
   Select,
 } from '@ui-kitten/components';
+import LoadingIndicator from '../components/LoadingIndicator';
+import Error from '../components/Error';
 
 const sortOptions = [
   {text: 'full_name'},
@@ -34,13 +34,27 @@ const Repositories = ({route, navigation}) => {
     asyncGetUserRepos({username: user.login});
   }, [user, asyncGetUserRepos]);
 
+  const openRepoUrl = useCallback(url => {
+    Linking.openURL(url).catch(err => console.error('An error occurred', err));
+  });
+
   const renderItem = ({item, index}) => (
-    <ListItem title={item.full_name}>
+    <ListItem
+      title={item.full_name}
+      onPress={() => {
+        openRepoUrl(item.html_url);
+      }}>
       <Layout style={styles.item}>
-        <Text>{item.full_name}</Text>
+        <Text>{item.name}</Text>
         <Layout style={styles.stars}>
-          <Text style={styles.stargazersCount}>{item.stargazers_count}</Text>
-          <Icon name="star" width={20} height={20} fill="#3366FF" />
+          {item.stargazers_count > 0 && (
+            <>
+              <Text style={styles.stargazersCount} category="s1">
+                {item.stargazers_count}
+              </Text>
+              <Icon name="star" width={20} height={20} fill="#3366FF" />
+            </>
+          )}
         </Layout>
       </Layout>
     </ListItem>
@@ -68,8 +82,8 @@ const Repositories = ({route, navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Layout style={styles.container}>
-        <Text>Profile</Text>
-        {error && <Text>{error.message}</Text>}
+        <Text category="h6">Repositories</Text>
+        <Error error={error} />
         <Layout style={styles.filters}>
           <Select
             data={sortOptions}
@@ -90,15 +104,12 @@ const Repositories = ({route, navigation}) => {
           />
         </Layout>
         <List
+          style={styles.list}
           data={userRepos}
           renderItem={renderItem}
           refreshing={refreshing}
         />
-        <Modal backdropStyle={styles.backdrop} visible={refreshing}>
-          <Layout style={styles.modalContainer}>
-            <Spinner />
-          </Layout>
-        </Modal>
+        <LoadingIndicator visible={refreshing} />
       </Layout>
     </SafeAreaView>
   );
@@ -115,26 +126,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
-  stars: {flexDirection: 'row'},
+  stars: {flexDirection: 'row', alignItems: 'center'},
   filters: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 20,
   },
   sort: {
     flex: 1,
   },
+  list: {
+    backgroundColor: 'white',
+  },
   stargazersCount: {
     // width: 40,
     // textAlign: 'right',
-  },
-  modalContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 256,
-    padding: 16,
-  },
-  backdrop: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
 });
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Profile from './Profile';
 import Repositories from './Repositories';
@@ -9,6 +9,9 @@ import {
   TopNavigationAction,
   Icon,
 } from '@ui-kitten/components';
+import {useActions} from '../hooks/useActions';
+import actions from '../state/userList';
+import {useDispatch} from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,9 +19,21 @@ const BackIcon = style => <Icon {...style} name="arrow-back" />;
 
 const UserDetails = ({route, navigation}) => {
   const {user} = route.params;
-  const navigateBack = () => {
+
+  const dispatch = useDispatch();
+
+  const navigateBack = useCallback(() => {
     navigation.goBack();
-  };
+  }, [navigation]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      // reset store userProfile userRepos
+      dispatch({type: 'USER/RESET'});
+    });
+    return unsubscribe;
+  }, [navigation, dispatch]);
+
   const BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );

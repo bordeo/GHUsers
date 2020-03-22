@@ -4,7 +4,15 @@ import {useSelector} from 'react-redux';
 import {getUserProfile} from '../state/userList/asyncActions';
 import {useActions} from '../hooks/useActions';
 import {selector as userListSelector} from '../state/userList';
-import {Layout, Spinner, Avatar, Modal, Text} from '@ui-kitten/components';
+import {Layout, Avatar, Text, Button, Icon, Card} from '@ui-kitten/components';
+import LoadingIndicator from '../components/LoadingIndicator';
+import Error from '../components/Error';
+
+const NavigateIcon = style => {
+  return (
+    <Icon style={style} name="diagonal-arrow-right-up-outline" fill="#fff" />
+  );
+};
 
 const Profile = ({route, navigation}) => {
   const {user} = route.params;
@@ -14,32 +22,34 @@ const Profile = ({route, navigation}) => {
   const asyncGetUserProfile = useActions(getUserProfile);
 
   useEffect(() => {
-    asyncGetUserProfile(user.login);
+    asyncGetUserProfile({username: user.login});
   }, [user, asyncGetUserProfile]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <Layout style={styles.container}>
-        <Text>Profile</Text>
-        {error && <Text>{error.message}</Text>}
+        <Text category="h6">Profile</Text>
+        <Error error={error} />
         {!!userProfile && (
-          <>
-            <Avatar
-              width={40}
-              height={40}
-              source={{uri: userProfile.avatar_url}}
-            />
-            <Text>{userProfile.name}</Text>
-            <Text>{userProfile.email}</Text>
-            <Text>{userProfile.html_url}</Text>
-            <Text>{userProfile.location}</Text>
-          </>
+          <Card>
+            <Layout style={styles.content}>
+              <Layout style={styles.avatar}>
+                <Avatar size="giant" source={{uri: userProfile.avatar_url}} />
+              </Layout>
+              <Layout style={styles.userData}>
+                <Text category="s1">{userProfile.name}</Text>
+                {!!userProfile.email && (
+                  <Text category="s1">{userProfile.email}</Text>
+                )}
+                <Button style={styles.button} icon={NavigateIcon}>
+                  Profile page
+                </Button>
+                <Text category="s1">{userProfile.location}</Text>
+              </Layout>
+            </Layout>
+          </Card>
         )}
-        <Modal backdropStyle={styles.backdrop} visible={refreshing}>
-          <Layout style={styles.modalContainer}>
-            <Spinner />
-          </Layout>
-        </Modal>
+        <LoadingIndicator visible={refreshing} />
       </Layout>
     </SafeAreaView>
   );
@@ -51,15 +61,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
   },
-  modalContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 256,
-    padding: 16,
+  content: {
+    flexDirection: 'row',
   },
-  backdrop: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  avatar: {
+    flex: 0.3,
   },
+  userData: {
+    flex: 0.7,
+  },
+  button: {flexDirection: 'row-reverse'},
 });
 
 export default Profile;

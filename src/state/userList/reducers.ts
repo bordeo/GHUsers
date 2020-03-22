@@ -9,7 +9,7 @@ export const initialState: UserListState = {
   userRepos: null,
   refreshing: false,
   error: null,
-  totalCount: null,
+  totalCount: 0,
   next: null,
 };
 
@@ -33,6 +33,14 @@ export const reducerMap = {
       refreshing: false,
     };
   },
+  [actions.userList.add]: (state, {payload}) => ({
+    ...state,
+    users: [...state.users, ...payload.users],
+    totalCount: payload.total_count,
+    next: payload.next,
+    error: null,
+    refreshing: false,
+  }),
   [actions.userProfile.request]: state => ({
     ...state,
     userProfile: null,
@@ -71,6 +79,13 @@ export const reducerMap = {
       ...payload,
       error: null,
       refreshing: false,
+    };
+  },
+  [actions.user.reset]: state => {
+    return {
+      ...state,
+      userProfile: null,
+      userRepos: null,
     };
   },
 };

@@ -5,6 +5,7 @@ export const actionMap = {
     REQUEST: undefined,
     FAILURE: undefined,
     SUCCESS: undefined,
+    ADD: undefined,
   },
   USER_PROFILE: {
     REQUEST: undefined,
@@ -15,6 +16,9 @@ export const actionMap = {
     REQUEST: undefined,
     FAILURE: undefined,
     SUCCESS: undefined,
+  },
+  USER: {
+    RESET: undefined,
   },
 };
 

@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
+import {StatusBar} from 'react-native';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {mapping, light as lightTheme} from '@eva-design/eva';
@@ -18,6 +19,7 @@ const App = () => {
   return (
     <>
       <IconRegistry icons={EvaIconsPack} />
+      <StatusBar backgroundColor="white" />
       <Provider store={store}>
         <ApplicationProvider mapping={mapping} theme={lightTheme}>
           <NavigationContainer>

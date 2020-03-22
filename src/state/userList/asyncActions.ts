@@ -7,7 +7,12 @@ export const searchUsers = payload =>
 
     try {
       const response = await githubApi.getUsers(payload);
-      dispatch(actions.userList.success(response));
+      if (payload.page) {
+        //we are navigate to the next page
+        dispatch(actions.userList.add(response));
+      } else {
+        dispatch(actions.userList.success(response));
+      }
     } catch (error) {
       console.log(error);
       dispatch(actions.userList.failure(error));
