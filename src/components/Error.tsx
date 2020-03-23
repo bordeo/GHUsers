@@ -20,7 +20,6 @@ const Error: FunctionComponent<Props> = ({error}) => {
     );
     message = errorConverted ? errorConverted.message : error.message;
   }
-  console.log(message);
 
   return message ? <Text style={styles.message}>{message}</Text> : null;
 };
