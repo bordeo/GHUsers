@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useMemo} from 'react';
+import React, {FunctionComponent} from 'react';
 import {StyleSheet} from 'react-native';
 import {Text} from '@ui-kitten/components';
 
@@ -12,25 +12,17 @@ const errorMapping = [
 type Props = {error?: {message: string}};
 
 const Error: FunctionComponent<Props> = ({error}) => {
-  const message = useMemo(() => {
-    if (error) {
-      const errorConverted = errorMapping.find(
-        (errorMap: {original: string; message: string}) =>
-          errorMap.original === error.message,
-      );
-      return errorConverted ? errorConverted.message : error.message;
-    } else {
-      return null;
-    }
-  }, [error]);
+  let message = '';
+  if (error) {
+    const errorConverted = errorMapping.find(
+      (errorMap: {original: string; message: string}) =>
+        errorMap.original === error.message,
+    );
+    message = errorConverted ? errorConverted.message : error.message;
+  }
+  console.log(message);
 
-  return (
-    message && (
-      <Text style={styles.message} status="error">
-        {message}
-      </Text>
-    )
-  );
+  return message ? <Text style={styles.message}>{message}</Text> : null;
 };
 
 const styles = StyleSheet.create({

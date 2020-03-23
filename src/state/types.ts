@@ -27,9 +27,9 @@ export type UsersState = {
   userProfile: null | UserProfile;
   userRepos: null | Repo[];
   refreshing: boolean;
-  error: null | string;
-  totalCount: null | number;
-  next: null | {};
+  error: undefined | {message: string};
+  totalCount: number;
+  next: undefined | {page: number};
 };
 
 export type AppState = {

@@ -4,11 +4,11 @@ import React, {
   useState,
   useCallback,
 } from 'react';
-import {SafeAreaView, StyleSheet, ImageStyle} from 'react-native';
+import {SafeAreaView, StyleSheet, ImageStyle, ImageProps} from 'react-native';
 import {useSelector} from 'react-redux';
 import {searchUsers} from '../state/users/asyncActions';
 import {useActions} from '../hooks/useActions';
-import {selector as UserListSelector} from '../state/users';
+import {selector as UsersSelector} from '../state/users';
 import {ScreenProps} from '../types';
 
 import {debounce} from 'lodash';
@@ -24,19 +24,21 @@ import {
   Avatar,
   StyleType,
 } from '@ui-kitten/components';
+import FastImage from 'react-native-fast-image';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Error from '../components/Error';
+import {User} from '../state/types';
 
 const Users: FunctionComponent<ScreenProps> = ({navigation}) => {
   const [query, setQuery] = useState('');
   const {users, totalCount, next, refreshing, error} = useSelector(
-    UserListSelector,
+    UsersSelector,
   );
 
   const asyncSearchUsers = useActions(searchUsers);
 
   const getUsersDecounced = useCallback(
-    debounce(async userQuery => {
+    debounce(async (userQuery: string) => {
       asyncSearchUsers({query: userQuery});
     }, 500),
     [asyncSearchUsers],
@@ -61,14 +63,11 @@ const Users: FunctionComponent<ScreenProps> = ({navigation}) => {
       {...style}
     />
   );
-  const renderItemIcon = (
-    style: ImageProps,
-    item,
-  ): React.ReactElement<ImageProps> => (
-    <Avatar {...style} source={{uri: item.avatar_url}} />
+  const renderItemIcon = (style: ImageStyle, item: User) => (
+    <FastImage {...style} source={{uri: item.avatar_url}} />
   );
 
-  const renderItem = ({item}) => (
+  const renderItem = ({item}: {item: User}) => (
     <ListItem
       icon={style => renderItemIcon(style, item)}
       onPress={() =>
@@ -107,8 +106,13 @@ const Users: FunctionComponent<ScreenProps> = ({navigation}) => {
         />
         <Error error={error} />
         {totalCount > 0 && (
-          <Text style={styles.totalCount} status="info">
+          <Text style={styles.resultsTitle} status="info">
             {totalCount} Users found
+          </Text>
+        )}
+        {query.length > 2 && users.length === 0 && (
+          <Text style={styles.resultsTitle} status="info">
+            No users found
           </Text>
         )}
         <List
@@ -131,7 +135,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
   },
-  totalCount: {
+  resultsTitle: {
+    marginTop: 10,
+    marginBottom: 10,
     marginLeft: 20,
   },
   list: {
