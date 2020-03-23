@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useEffect} from 'react';
-import {SafeAreaView, StyleSheet, Linking} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import {getUserProfile} from '../state/users/asyncActions';
 import {useActions} from '../hooks/useActions';
@@ -17,6 +17,7 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import Error from '../components/Error';
 import {UserDetailsScreenProps} from '../types';
 import openUrl from '../utils/openUrl';
+import FastImage from 'react-native-fast-image';
 
 const NavigateIcon = (style: StyleType) => {
   return (
@@ -44,7 +45,10 @@ const Profile: FunctionComponent<UserDetailsScreenProps> = ({route}) => {
           <Card style={styles.card}>
             <Layout style={styles.content}>
               <Layout style={styles.avatar}>
-                <Avatar size="giant" source={{uri: userProfile.avatar_url}} />
+                <FastImage
+                  style={styles.avatarImage}
+                  source={{uri: userProfile.avatar_url}}
+                />
               </Layout>
               <Layout style={styles.userData}>
                 <Text category="s1">{userProfile.name}</Text>
@@ -83,6 +87,7 @@ const styles = StyleSheet.create({
   avatar: {
     flex: 0.3,
   },
+  avatarImage: {width: 70, height: 70, borderRadius: 70},
   userData: {
     flex: 0.6,
   },
