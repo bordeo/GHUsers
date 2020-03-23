@@ -10,7 +10,6 @@ import {searchUsers} from '../state/users/asyncActions';
 import {useActions} from '../hooks/useActions';
 import {selector as UsersSelector} from '../state/users';
 import {ScreenProps} from '../types';
-
 import {debounce} from 'lodash';
 import {
   Layout,
@@ -106,14 +105,9 @@ const Users: FunctionComponent<ScreenProps> = ({navigation}) => {
         />
         <Error error={error} />
         {totalCount > 0 && (
-          <Text style={styles.resultsTitle} status="info">
-            {totalCount} Users found
-          </Text>
-        )}
-        {query.length > 2 && users.length === 0 && (
-          <Text style={styles.resultsTitle} status="info">
-            No users found
-          </Text>
+          <Text
+            style={styles.resultsTitle}
+            status="info">{`${totalCount} Users found`}</Text>
         )}
         <List
           style={styles.list}

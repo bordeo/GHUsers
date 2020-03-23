@@ -1,3 +1,5 @@
+import {NetworkState} from 'react-native-offline/dist/src/types';
+
 export type User = {
   login: string;
   id: number;
@@ -34,4 +36,5 @@ export type UsersState = {
 
 export type AppState = {
   users: UsersState;
+  network: NetworkState;
 };
