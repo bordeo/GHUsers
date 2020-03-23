@@ -22,7 +22,7 @@ export type Repo = {
   stargazers_count: number;
 };
 
-export type UserListState = {
+export type UsersState = {
   users: User[];
   userProfile: null | UserProfile;
   userRepos: null | Repo[];
@@ -32,21 +32,6 @@ export type UserListState = {
   next: null | {};
 };
 
-export type UserListRequestAction = {
-  type: string;
-};
-export type UserListFailureAction = {
-  type: string;
-};
-export type UserListSuccessAction = {
-  type: string;
-};
-
-export type UserListAction =
-  | UserListRequestAction
-  | UserListFailureAction
-  | UserListSuccessAction;
-
 export type AppState = {
-  userList: UserListState;
+  users: UsersState;
 };

@@ -1,11 +1,11 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {AppState} from './types';
-import {reducers as userList} from './userList';
+import {reducers as users} from './users';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 
 const reducers = {
-  userList,
+  users,
 };
 
 const rootReducer = combineReducers<AppState>({...reducers});

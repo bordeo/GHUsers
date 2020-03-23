@@ -6,9 +6,9 @@ import React, {
 } from 'react';
 import {SafeAreaView, StyleSheet, ImageStyle} from 'react-native';
 import {useSelector} from 'react-redux';
-import {searchUsers} from '../state/userList/asyncActions';
+import {searchUsers} from '../state/users/asyncActions';
 import {useActions} from '../hooks/useActions';
-import {selector as UserListSelector} from '../state/userList';
+import {selector as UserListSelector} from '../state/users';
 import {ScreenProps} from '../types';
 
 import {debounce} from 'lodash';

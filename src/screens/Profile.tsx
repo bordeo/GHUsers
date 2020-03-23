@@ -1,9 +1,9 @@
 import React, {FunctionComponent, useEffect} from 'react';
 import {SafeAreaView, StyleSheet, Linking} from 'react-native';
 import {useSelector} from 'react-redux';
-import {getUserProfile} from '../state/userList/asyncActions';
+import {getUserProfile} from '../state/users/asyncActions';
 import {useActions} from '../hooks/useActions';
-import {selector as userListSelector} from '../state/userList';
+import {selector as userListSelector} from '../state/users';
 import {
   Layout,
   Avatar,

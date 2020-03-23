@@ -10,7 +10,7 @@ import {
   Icon,
   StyleType,
 } from '@ui-kitten/components';
-import {actions} from '../state/userList';
+import {actions} from '../state/users';
 import {useDispatch} from 'react-redux';
 import {ScreenProps} from '../types';
 

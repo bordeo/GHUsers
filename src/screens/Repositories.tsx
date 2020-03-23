@@ -1,9 +1,9 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
-import {getUserRepos} from '../state/userList/asyncActions';
+import {getUserRepos} from '../state/users/asyncActions';
 import {useActions} from '../hooks/useActions';
-import {selector as userListSelector} from '../state/userList';
+import {selector as userListSelector} from '../state/users';
 import {
   Layout,
   List,
@@ -11,13 +11,19 @@ import {
   Text,
   Icon,
   Select,
+  SelectOptionType,
 } from '@ui-kitten/components';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Error from '../components/Error';
 import {UserDetailsScreenProps} from '../types';
 import openUrl from '../utils/openUrl';
+import {Repo} from '../state/types';
 
-const sortOptions = [
+interface SelectOption extends SelectOptionType {
+  value?: string;
+}
+
+const sortOptions: SelectOption[] = [
   {value: 'full_name', text: 'Name'},
   {value: 'created', text: 'Creation Date'},
   {value: 'updated', text: 'Update Date'},
@@ -36,7 +42,7 @@ const Repositories: FunctionComponent<UserDetailsScreenProps> = ({route}) => {
     asyncGetUserRepos({username: user.login});
   }, [user, asyncGetUserRepos]);
 
-  const renderItem = ({item}) => (
+  const renderItem = ({item}: {item: Repo}) => (
     <ListItem
       title={item.full_name}
       onPress={() => {
@@ -45,11 +51,13 @@ const Repositories: FunctionComponent<UserDetailsScreenProps> = ({route}) => {
       <Layout style={styles.item}>
         <Text>{item.name}</Text>
         <Layout style={styles.stars}>
-          {item.stargazers_count > 0 && (
+          {item.stargazers_count > 0 ? (
             <>
-              <Text category="s1">{item.stargazers_count}</Text>
+              <Text category="s1">{item.stargazers_count.toString()}</Text>
               <Icon name="star" width={20} height={20} fill="#3366FF" />
             </>
+          ) : (
+            <Icon name="star-outline" width={20} height={20} fill="#3366FF" />
           )}
         </Layout>
       </Layout>
@@ -66,7 +74,7 @@ const Repositories: FunctionComponent<UserDetailsScreenProps> = ({route}) => {
     });
   };
 
-  const onChangeSort = option => {
+  const onChangeSort = (option: SelectOption) => {
     setSort(option);
     asyncGetUserRepos({
       username: user.login,

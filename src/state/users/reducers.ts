@@ -1,9 +1,9 @@
 import {handleActions} from 'redux-actions';
 
-import {UserListState} from '../types';
+import {UsersState} from '../types';
 import actions from './actions';
 
-export const initialState: UserListState = {
+export const initialState: UsersState = {
   users: [],
   userProfile: null,
   userRepos: null,
