@@ -1,22 +1,32 @@
-import React, {useEffect, useCallback} from 'react';
+import React, {FunctionComponent, useEffect} from 'react';
 import {SafeAreaView, StyleSheet, Linking} from 'react-native';
 import {useSelector} from 'react-redux';
 import {getUserProfile} from '../state/userList/asyncActions';
 import {useActions} from '../hooks/useActions';
 import {selector as userListSelector} from '../state/userList';
-import {Layout, Avatar, Text, Button, Icon, Card} from '@ui-kitten/components';
+import {
+  Layout,
+  Avatar,
+  Text,
+  Button,
+  Icon,
+  Card,
+  StyleType,
+} from '@ui-kitten/components';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Error from '../components/Error';
+import {UserDetailsScreenProps} from '../types';
+import openUrl from '../utils/openUrl';
 
-const NavigateIcon = style => {
+const NavigateIcon = (style: StyleType) => {
   return (
     <Icon style={style} name="diagonal-arrow-right-up-outline" fill="#fff" />
   );
 };
 
-const Profile = ({route, navigation}) => {
+const Profile: FunctionComponent<UserDetailsScreenProps> = ({route}) => {
   const {user} = route.params;
-  console.log(user);
+
   const {userProfile, refreshing, error} = useSelector(userListSelector);
 
   const asyncGetUserProfile = useActions(getUserProfile);
@@ -24,10 +34,6 @@ const Profile = ({route, navigation}) => {
   useEffect(() => {
     asyncGetUserProfile({username: user.login});
   }, [user, asyncGetUserProfile]);
-
-  const openProfileUrl = url => {
-    Linking.openURL(url).catch(err => console.error('An error occurred', err));
-  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -49,7 +55,7 @@ const Profile = ({route, navigation}) => {
                   style={styles.button}
                   icon={NavigateIcon}
                   onPress={() => {
-                    openProfileUrl(userProfile.html_url);
+                    openUrl(userProfile.html_url);
                   }}>
                   Profile page
                 </Button>

@@ -1,10 +1,15 @@
-import React from 'react';
-import {useEffect, useState, useCallback} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import React, {
+  FunctionComponent,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
+import {SafeAreaView, StyleSheet, ImageStyle} from 'react-native';
 import {useSelector} from 'react-redux';
 import {searchUsers} from '../state/userList/asyncActions';
 import {useActions} from '../hooks/useActions';
 import {selector as UserListSelector} from '../state/userList';
+import {ScreenProps} from '../types';
 
 import {debounce} from 'lodash';
 import {
@@ -17,11 +22,12 @@ import {
   ListItem,
   Icon,
   Avatar,
+  StyleType,
 } from '@ui-kitten/components';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Error from '../components/Error';
 
-const Users = ({navigation}) => {
+const Users: FunctionComponent<ScreenProps> = ({navigation}) => {
   const [query, setQuery] = useState('');
   const {users, totalCount, next, refreshing, error} = useSelector(
     UserListSelector,
@@ -44,7 +50,9 @@ const Users = ({navigation}) => {
     }
   }, [query, getUsersDecounced]);
 
-  const renderItemAccessory = style => (
+  const renderItemAccessory = (
+    style: ImageStyle,
+  ): React.ReactElement<ImageProps> => (
     <Icon
       width={32}
       height={32}
@@ -53,11 +61,14 @@ const Users = ({navigation}) => {
       {...style}
     />
   );
-  const renderItemIcon = ({tintColor, ...style}, item) => (
+  const renderItemIcon = (
+    style: ImageProps,
+    item,
+  ): React.ReactElement<ImageProps> => (
     <Avatar {...style} source={{uri: item.avatar_url}} />
   );
 
-  const renderItem = ({item, index}) => (
+  const renderItem = ({item}) => (
     <ListItem
       icon={style => renderItemIcon(style, item)}
       onPress={() =>
@@ -68,7 +79,9 @@ const Users = ({navigation}) => {
       <Text style={styles.itemName}>{item.login}</Text>
     </ListItem>
   );
-  const renderSearchIcon = style => <Icon {...style} name="search-outline" />;
+  const renderSearchIcon = (style: StyleType) => (
+    <Icon {...style} name="search-outline" />
+  );
 
   const onListEndReached = useCallback(() => {
     if (next) {
@@ -119,7 +132,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   totalCount: {
-    // textAlign: 'center',
     marginLeft: 20,
   },
   list: {

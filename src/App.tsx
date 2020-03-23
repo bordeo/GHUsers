@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {FunctionComponent} from 'react';
 import {StatusBar} from 'react-native';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
@@ -12,10 +12,11 @@ import Users from './screens/Users';
 import UserDetails from './screens/UserDetails';
 import store from './state/store';
 import {Provider} from 'react-redux';
+import {RootStackParamList} from './types';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
-const App = () => {
+const App: FunctionComponent = () => {
   return (
     <>
       <IconRegistry icons={EvaIconsPack} />

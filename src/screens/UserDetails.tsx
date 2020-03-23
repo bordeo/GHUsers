@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback} from 'react';
+import React, {FunctionComponent, useEffect, useCallback} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Profile from './Profile';
 import Repositories from './Repositories';
@@ -8,16 +8,17 @@ import {
   TopNavigation,
   TopNavigationAction,
   Icon,
+  StyleType,
 } from '@ui-kitten/components';
-import {useActions} from '../hooks/useActions';
-import actions from '../state/userList';
+import {actions} from '../state/userList';
 import {useDispatch} from 'react-redux';
+import {ScreenProps} from '../types';
 
 const Tab = createBottomTabNavigator();
 
-const BackIcon = style => <Icon {...style} name="arrow-back" />;
+const BackIcon = (style: StyleType) => <Icon {...style} name="arrow-back" />;
 
-const UserDetails = ({route, navigation}) => {
+const UserDetails: FunctionComponent<ScreenProps> = ({route, navigation}) => {
   const {user} = route.params;
 
   const dispatch = useDispatch();
@@ -28,8 +29,8 @@ const UserDetails = ({route, navigation}) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
-      // reset store userProfile userRepos
-      dispatch({type: 'USER/RESET'});
+      // reset store userProfile and userRepos
+      dispatch(actions.user.reset());
     });
     return unsubscribe;
   }, [navigation, dispatch]);
@@ -47,7 +48,6 @@ const UserDetails = ({route, navigation}) => {
       <Divider />
       <Tab.Navigator
         tabBarOptions={{
-          style: styles.tabBar,
           labelStyle: styles.labelStyle,
         }}>
         <Tab.Screen name="Profile" component={Profile} initialParams={{user}} />

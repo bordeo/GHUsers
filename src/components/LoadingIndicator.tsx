@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {FunctionComponent} from 'react';
 import {StyleSheet} from 'react-native';
 import {Modal, Layout, Spinner} from '@ui-kitten/components';
 
-const LoadingIndicator = ({visible}) => {
+type Props = {visible: boolean};
+
+const LoadingIndicator: FunctionComponent<Props> = ({visible}) => {
   return (
     <Modal backdropStyle={styles.backdrop} visible={visible}>
       <Layout style={styles.modalContainer}>

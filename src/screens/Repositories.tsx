@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useCallback} from 'react';
-import {SafeAreaView, StyleSheet, Linking} from 'react-native';
+import React, {FunctionComponent, useEffect, useState} from 'react';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import {getUserRepos} from '../state/userList/asyncActions';
 import {useActions} from '../hooks/useActions';
@@ -14,6 +14,8 @@ import {
 } from '@ui-kitten/components';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Error from '../components/Error';
+import {UserDetailsScreenProps} from '../types';
+import openUrl from '../utils/openUrl';
 
 const sortOptions = [
   {value: 'full_name', text: 'Name'},
@@ -22,7 +24,7 @@ const sortOptions = [
   {value: 'pushed', text: 'Push Date'},
 ];
 
-const Repositories = ({route, navigation}) => {
+const Repositories: FunctionComponent<UserDetailsScreenProps> = ({route}) => {
   const {user} = route.params;
   const [sort, setSort] = useState(sortOptions[0]);
   const [direction, setDirection]: ['asc' | 'desc', any] = useState('asc');
@@ -34,24 +36,18 @@ const Repositories = ({route, navigation}) => {
     asyncGetUserRepos({username: user.login});
   }, [user, asyncGetUserRepos]);
 
-  const openRepoUrl = url => {
-    Linking.openURL(url).catch(err => console.error('An error occurred', err));
-  };
-
-  const renderItem = ({item, index}) => (
+  const renderItem = ({item}) => (
     <ListItem
       title={item.full_name}
       onPress={() => {
-        openRepoUrl(item.html_url);
+        openUrl(item.html_url);
       }}>
       <Layout style={styles.item}>
         <Text>{item.name}</Text>
         <Layout style={styles.stars}>
           {item.stargazers_count > 0 && (
             <>
-              <Text style={styles.stargazersCount} category="s1">
-                {item.stargazers_count}
-              </Text>
+              <Text category="s1">{item.stargazers_count}</Text>
               <Icon name="star" width={20} height={20} fill="#3366FF" />
             </>
           )}
