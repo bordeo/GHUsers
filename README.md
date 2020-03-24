@@ -8,7 +8,7 @@
 
 ## About The Project
 
-This app lets you search through GiHhub users and see user details including repos
+This app allow you search through GiHhub users and see their prfile's detail and repos
 
 ### Built With
 
