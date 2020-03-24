@@ -20,7 +20,7 @@ const App: FunctionComponent = () => {
   return (
     <>
       <IconRegistry icons={EvaIconsPack} />
-      <StatusBar backgroundColor="white" />
+      <StatusBar backgroundColor="white" barStyle="dark-content" />
       <Provider store={store}>
         <ReduxNetworkProvider>
           <ApplicationProvider mapping={mapping} theme={lightTheme}>
